@@ -1,6 +1,8 @@
-# test_application
+# Simple Data Management App
 
-A new Flutter project.
+Aplikasi ini mengimplementasikan state management Cubit.
+
+Note: Pastikan perangkat sudah terkoneksi dengan internet sebelum menjalankan aplikasi. Hal ini untuk mencegah kerusakan pada sistem karena pihak developer belum menerapkan pencegahan terkait hal tersebut.
 
 ## Getting Started
 
