@@ -1,8 +1,6 @@
 # Simple Data Management App
 
-Aplikasi ini mengimplementasikan state management Cubit dan hanya bekerja di device yang menjalankan Android.
-
-Note: Pastikan perangkat sudah terkoneksi dengan internet sebelum menjalankan aplikasi. Hal ini untuk mencegah kerusakan pada sistem karena pihak developer belum menerapkan pencegahan terkait hal tersebut.
+Aplikasi ini mengimplementasikan state management GetX (+ Hive, Dio).
 
 ## Getting Started
 

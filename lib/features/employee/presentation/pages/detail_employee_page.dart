@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:test_application/model/employee_model.dart';
+import 'package:test_application/features/employee/data/models/employee_model.dart';
 
 class DetailEmployeePage extends StatelessWidget {
   final Employee employee;
-  const DetailEmployeePage({super.key, required this.employee});
+  const DetailEmployeePage({Key? key, required this.employee})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
