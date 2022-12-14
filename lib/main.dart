@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:test_application/core/routes/routes.dart';
 import 'package:test_application/features/authentication/data/models/auth_model.dart';
-import 'package:test_application/features/authentication/presentation/pages/login_page.dart';
+import 'package:test_application/init_dependency.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +24,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.indigo,
       ),
-      home: const LoginPage(),
+      initialBinding: InitDependency(),
+      getPages: routes,
+      initialRoute: '/',
     );
   }
 }

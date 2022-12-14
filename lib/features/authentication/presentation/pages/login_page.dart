@@ -1,20 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:test_application/features/authentication/presentation/controllers/auth_controller.dart';
 
-import '../../../employee/presentation/pages/home_page.dart';
+import '../controllers/auth_controller.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
-
-  @override
-  State<LoginPage> createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final AuthController get = Get.put(AuthController());
+  static const String routeName = '/login';
 
   void login() async {
     try {
@@ -24,14 +15,14 @@ class _LoginPageState extends State<LoginPage> {
           content: const Center(
             child: CircularProgressIndicator(strokeWidth: 7.5),
           ));
-      await get.login(emailController.text, passwordController.text);
-      if (!mounted) return;
-
-      Navigator.of(context).pop();
-      Get.to(const HomePage());
+      await AuthController.to.login();
+      Get
+        ..back()
+        ..offNamed('/home');
     } catch (e) {
-      Navigator.of(context).pop();
-      Get.defaultDialog(title: 'Login Failed!', content: Text(e.toString()));
+      Get
+        ..back()
+        ..defaultDialog(title: 'Login Failed!', content: Text(e.toString()));
     }
   }
 
@@ -52,13 +43,7 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     Expanded(
                       child: Center(
-                        child: Image.network("https://reqres.in/img/logo.png",
-                            width: 150,
-                            loadingBuilder: (_, child, loadingProgress) =>
-                                loadingProgress == null
-                                    ? child
-                                    : const CircularProgressIndicator(
-                                        color: Colors.white)),
+                        child: Image.asset('assets/logo/logo.png', width: 150),
                       ),
                     ),
                     Expanded(
@@ -75,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               TextField(
-                                controller: emailController,
+                                controller: AuthController.to.emailController,
                                 keyboardType: TextInputType.emailAddress,
                                 textInputAction: TextInputAction.next,
                                 decoration: const InputDecoration(
@@ -84,7 +69,8 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               const SizedBox(height: 20),
                               TextField(
-                                controller: passwordController,
+                                controller:
+                                    AuthController.to.passwordController,
                                 keyboardType: TextInputType.visiblePassword,
                                 textInputAction: TextInputAction.done,
                                 decoration: const InputDecoration(

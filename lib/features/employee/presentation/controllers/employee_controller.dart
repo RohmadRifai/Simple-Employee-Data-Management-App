@@ -1,42 +1,62 @@
-import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:hive/hive.dart';
 import 'package:test_application/features/employee/data/models/employee_model.dart';
-
-import '../../../../core/utils/constant.dart';
+import 'package:test_application/features/employee/data/repositories/employee_repository.dart';
 
 class EmployeeController extends GetxController {
-  List<Employee> _list = <Employee>[];
+  static EmployeeController get to => Get.find();
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+  final jobController = TextEditingController();
+  final numberController = TextEditingController();
+  final emailController = TextEditingController();
+  final _list = <Employee>[].obs;
 
   List<Employee> get list => _list;
 
   Future<void> getListEmployee() async {
-    if (await InternetConnectionChecker().hasConnection) {
-      try {
-        final response = await Dio().get('$baseUrl/users');
-        final json = response.data;
-        final data = json['data'] as List;
-        final list = data.map((e) => Employee.fromJson(e)).toList();
-        _list = list;
-        update();
-      } on DioError catch (e) {
-        throw Exception(e.response!.data['error']);
-      }
-    } else {
-      throw Exception(connectionFailureMessage);
+    try {
+      final list = await EmployeeRepository.fetchListEmployee();
+      _list.value = list;
+    } catch (e) {
+      rethrow;
     }
   }
 
-  Future<void> createEmployee(Employee employee) async {
-    if (await InternetConnectionChecker().hasConnection) {
-      try {
-        final data = employee.toJson();
-        await Dio().post('$baseUrl/users', data: data);
-      } on DioError catch (e) {
-        throw Exception(e.response!.data['error']);
-      }
-    } else {
-      throw Exception(connectionFailureMessage);
+  Future<void> addEmployee() async {
+    try {
+      final employee = await EmployeeRepository.createEmployee(Employee(
+          firstName: firstNameController.text,
+          lastName: lastNameController.text,
+          job: jobController.text,
+          number: numberController.text,
+          email: emailController.text));
+      _list.add(employee);
+      clear();
+    } catch (e) {
+      rethrow;
     }
+  }
+
+  void clear() {
+    firstNameController.clear();
+    lastNameController.clear();
+    jobController.clear();
+    numberController.clear();
+    emailController.clear();
+  }
+
+  @override
+  void onInit() {
+    getListEmployee();
+    super.onInit();
+  }
+
+  @override
+  void onClose() {
+    Hive.close();
+    clear();
+    super.onClose();
   }
 }

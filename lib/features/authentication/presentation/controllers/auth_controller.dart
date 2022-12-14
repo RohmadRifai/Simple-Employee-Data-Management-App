@@ -1,28 +1,22 @@
-import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:test_application/features/authentication/data/models/auth_model.dart';
-import 'package:test_application/features/authentication/data/sources/auth_local_data_source.dart';
-
-import '../../../../core/utils/constant.dart';
+import 'package:test_application/features/authentication/data/repositories/auth_repositories.dart';
 
 class AuthController extends GetxController {
-  Future<void> login(String email, String password) async {
-    if (await InternetConnectionChecker().hasConnection) {
-      try {
-        final data = {"email": email, "password": password};
-        final response = await Dio().post('$baseUrl/login', data: data);
-        final token = response.data['token'];
+  static AuthController get to => Get.find();
 
-        await AuthLocalDataSource.instance.cacheToken(token);
-      } on DioError catch (e) {
-        throw e.response!.data['error'];
-      }
-    } else {
-      throw connectionFailureMessage;
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  Future<void> login() async {
+    try {
+      await AuthRepository.login(emailController.text, passwordController.text);
+    } catch (e) {
+      rethrow;
     }
   }
 
-  Future<void> logout() async =>
-      await AuthLocalDataSource.instance.deleteToken();
+  Future<void> logout() async => await AuthRepository.logout();
+
+  Future<bool> anyToken() async => await AuthRepository.checkToken();
 }
